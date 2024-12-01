@@ -1,0 +1,140 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Thiết lập font tiếng Việt
+\setmainfont{Times New Roman}
+\XeTeXlinebreaklocale "vi"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+% Cấu hình cho listings
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize, % Font code
+    keywordstyle=\color{blue},        % Từ khóa
+    stringstyle=\color{red},          % Chuỗi
+    commentstyle=\color{gray},        % Ghi chú
+    numbers=left,                     % Hiển thị số dòng
+    numberstyle=\tiny\color{gray},    % Kiểu số dòng
+    stepnumber=1,                     % Bước số dòng
+    numbersep=10pt,                   % Khoảng cách số dòng
+    backgroundcolor=\color{lightgray!10}, % Màu nền
+    frame=single,                     % Viền khung
+    rulecolor=\color{black},          % Màu viền khung
+    breaklines=true,                  % Tự động xuống dòng
+    captionpos=b,                     % Vị trí tiêu đề (b: bottom)
+    tabsize=4,                        % Kích thước tab
+    showspaces=false,                 % Ẩn dấu cách
+    showstringspaces=false,           % Ẩn dấu cách trong chuỗi
+}
+
+\title{Hướng dẫn giải bài toán "Two Sum"}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{1. Mô tả bài toán}
+
+Cho một danh sách các số nguyên \(nums\) và một số nguyên \(target\), hãy tìm hai chỉ số \(i, j\) \((i \neq j)\) sao cho:
+\[
+nums[i] + nums[j] = target
+\]
+
+\textbf{Yêu cầu:}
+\begin{itemize}
+    \item Chỉ có duy nhất một cặp thỏa mãn điều kiện.
+    \item Không sử dụng lại một phần tử hai lần.
+\end{itemize}
+
+\textbf{Đầu vào:}
+\begin{itemize}
+    \item Một danh sách số nguyên \(nums\) với \(2 \leq |nums| \leq 10^4\).
+    \item Giá trị của các phần tử: \(-10^9 \leq nums[i] \leq 10^9\).
+    \item Một số nguyên \(target\) với \(-10^9 \leq target \leq 10^9\).
+\end{itemize}
+
+\textbf{Đầu ra:} Một danh sách chứa hai chỉ số \([i, j]\).
+
+\section*{2. Hướng dẫn giải bài toán từng bước}
+
+\subsection*{Bước 1: Hiểu vấn đề}
+- Cần tìm hai số trong danh sách có tổng bằng \(target\).
+- Phải xác định chỉ số thay vì giá trị của các số.
+
+\subsection*{Bước 2: Chiến lược giải quyết}
+Sử dụng \textbf{Hash Map} để lưu trữ các giá trị đã gặp và chỉ số của chúng. Quá trình được thực hiện như sau:
+\begin{enumerate}[label=\arabic*)]
+    \item Duyệt qua danh sách \(nums\).
+    \item Tính phần chênh lệch \(diff = target - nums[i]\).
+    \item Kiểm tra nếu \(diff\) đã xuất hiện trong hash map:
+    \begin{itemize}
+        \item Nếu có: Trả về chỉ số của \(diff\) và chỉ số hiện tại \(i\).
+        \item Nếu không: Lưu \(nums[i]\) và chỉ số \(i\) vào hash map.
+    \end{itemize}
+\end{enumerate}
+
+\subsection*{Bước 3: Pseudocode}
+\begin{lstlisting}[caption={Pseudocode for Two Sum}]
+1. Create an empty hash map.
+2. Loop through each element in nums:
+   a. Compute diff = target - nums[i].
+   b. If diff exists in the hash map:
+      - Return [hashmap[diff], i].
+   c. If not:
+      - Store nums[i] in the hash map with value i.
+3. End the loop.
+\end{lstlisting}
+
+\subsection*{Bước 4: Cài đặt Python}
+\begin{lstlisting}[caption={Python Implementation of Two Sum}]
+def twoSum(nums, target):
+    hashmap = {}
+    for i, num in enumerate(nums):
+        diff = target - num
+        if diff in hashmap:
+            return [hashmap[diff], i]
+        hashmap[num] = i
+\end{lstlisting}
+
+\section*{3. Ưu và nhược điểm}
+
+\subsection*{Ưu điểm}
+\begin{itemize}
+    \item Độ phức tạp thời gian: \(O(n)\) do chỉ duyệt qua danh sách một lần.
+    \item Dễ hiểu và cài đặt.
+    \item Hiệu quả với dữ liệu đầu vào lớn (đến 10,000 phần tử).
+\end{itemize}
+
+\subsection*{Nhược điểm}
+\begin{itemize}
+    \item Sử dụng thêm bộ nhớ \(O(n)\) để lưu hash map.
+    \item Không kiểm tra đầu vào không hợp lệ (ví dụ, không tồn tại cặp số thỏa mãn).
+\end{itemize}
+
+\section*{4. Hướng cải thiện}
+\begin{itemize}
+    \item Bổ sung kiểm tra đầu vào để đảm bảo tính an toàn, ví dụ:
+    \begin{itemize}
+        \item Trả về giá trị mặc định nếu không tìm thấy cặp số (dành cho ứng dụng mở rộng).
+    \end{itemize}
+    \item Cải thiện bộ kiểm thử:
+    \begin{itemize}
+        \item Thử nghiệm với các danh sách lớn.
+        \item Kiểm tra hiệu năng khi dữ liệu chứa nhiều số trùng lặp.
+    \end{itemize}
+    \item Tối ưu bộ nhớ bằng cách giải quyết trực tiếp mà không cần hash map (áp dụng nếu danh sách đã sắp xếp).
+\end{itemize}
+
+\section*{5. Kết luận}
+
+Hàm \texttt{twoSum} là một giải pháp hiệu quả và phù hợp cho bài toán "Two Sum" với độ phức tạp thời gian \(O(n)\). Tuy nhiên, cần mở rộng khả năng xử lý lỗi và kiểm thử thêm nhiều trường hợp đặc biệt để tăng tính ứng dụng.
+
+\end{document}
